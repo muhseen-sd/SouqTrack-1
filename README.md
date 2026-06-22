@@ -1,14 +1,14 @@
 # CoinPulse
 
-A simple watchlist and price alert tool for crypto tokens I'm researching for spot trading. No exchange account, no noise — just the coins I actually care about, in one place.
+A simple watchlist and price alert tool for crypto tokens I'm researching for spot trading. No exchange account, no noise, just the coins I actually care about, in one place.
 
 ## Status: Work in Progress 🚧
 
-Building this while learning JavaScript properly — closures, async/await, the event loop, and so on — by using them in a real project instead of isolated exercises. Pushing commits as I go, so the history shows the actual learning process, not just a finished result.
+Building this while learning JavaScript properly, closures, async/await, the event loop, and so on, by using them in a real project instead of isolated exercises. Pushing commits as I go, so the history shows the actual learning process, not just a finished result.
 
 ## Why I'm building this
 
-I research small-cap and newly listed crypto tokens for spot trading — looking for real utility (DePIN, RWA, AI infrastructure, real DeFi revenue), Halal-screened, no leverage. Once I find a token worth watching, I want an easy way to track its price and get notified when it hits a level I care about, instead of checking apps manually all day.
+I research small-cap and newly listed crypto tokens for spot trading, looking for real utility (DePIN, RWA, AI infrastructure, real DeFi revenue), Halal-screened, no leverage. Once I find a token worth watching, I want an easy way to track its price and get notified when it hits a level I care about, instead of checking apps manually all day.
 
 ## Planned features (v1)
 
@@ -19,7 +19,7 @@ I research small-cap and newly listed crypto tokens for spot trading — looking
 
 ## Tech stack
 
-Plain JavaScript, HTML, and CSS. No framework yet — building it without React first so I actually understand the language before relying on a library that hides a lot of it.
+Plain JavaScript, HTML, and CSS. No framework yet; building it without React first so I actually understand the language before relying on a library that hides a lot of it.
 
 Price data from [CoinGecko's public API](https://www.coingecko.com/en/api/documentation).
 
