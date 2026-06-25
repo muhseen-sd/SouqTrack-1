@@ -3,6 +3,14 @@ console.log("2: script keeps running");
 
 const watchlist = document.getElementById("watchlist")
 
+const coinSymbols = {
+    bitcoin: "BTC",
+    ethereum: "ETH",
+    solana: "SOL"
+
+}
+
+
 function fetchCoinPrice(coinId){
     fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`)
     .then(response => response.json())
@@ -17,6 +25,7 @@ function fetchCoinPrice(coinId){
                 existing.textContent = `${coinId}: coin not found`
             } else{
                 let errMsg = document.createElement("p")
+                errMsg.className = "coin-error"
                 errMsg.id = "invalid-coin"
                 errMsg.textContent = `${coinId}: coin not found`
                 watchlist.appendChild(errMsg)
@@ -34,15 +43,28 @@ function fetchCoinPrice(coinId){
         let existing = document.getElementById(`price-${coinId}`)
         
         if(existing){
-            existing.textContent = `${coinId} price: ${data[coinId].usd}`
+            // card already exists -- just update the price
+            let priceEl = existing.querySelector(".coin-price")
+            priceEl.textContent = `$${data[coinId].usd.toLocaleString()}`
 
         } else{
-            let newEl = document.createElement("p")
-            newEl.id = `price-${coinId}`
-            newEl.textContent = `${coinId} price: ${data[coinId].usd}`
-            watchlist.appendChild(newEl)
-        }
+            // first time - bild the full card
+            let card = document.createElement("div")
+            card.className = "coin-card"
+            card.id = `price-${coinId}`
+            
+            let nameEl = document.createElement("div")
+            nameEl.textContent = coinSymbols[coinId] || coinId.toUpperCase()
 
+            let priceEl = document.createElement("p")
+            priceEl.className = "coin-price"
+            priceEl.textContent = `$${data[coinId].usd.toLocaleString()}`
+
+            card.appendChild(nameEl)
+            card.appendChild(priceEl)
+            watchlist.appendChild(card)
+        }
+            
     })
 
     // Error Handling II
