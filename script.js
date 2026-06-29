@@ -16,7 +16,7 @@ function fetchCoinPrice(coinId){
     .then(response => response.json())
     .then(data => {
 
-        // Error Handling I
+        // Error Handling: "coin not found"
         if(data[coinId] === undefined){
 
             let existing = document.getElementById("invalid-coin")
@@ -38,7 +38,6 @@ function fetchCoinPrice(coinId){
                 
 
         // Setting up an auto refresh 
-
         //Begin by checking if the element exist
         let existing = document.getElementById(`price-${coinId}`)
         
@@ -67,7 +66,7 @@ function fetchCoinPrice(coinId){
             
     })
 
-    // Error Handling II
+    // Error Handling: "network issue/disconnected"
     .catch(error => {
 
         let existing = document.getElementById("fetch-error")
@@ -86,6 +85,8 @@ function fetchCoinPrice(coinId){
 fetchCoinPrice("bitcoin")
 fetchCoinPrice("ethereum")
 fetchCoinPrice("fakecoin123")
+fetchCoinPrice("rain")
+fetchCoinPrice("dai")
 
 setInterval( () => {
     fetchCoinPrice("bitcoin")

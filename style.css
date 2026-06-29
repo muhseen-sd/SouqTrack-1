@@ -54,3 +54,31 @@ h1 {
     border-radius: 8px;
     border: 1px solid #f8514940;
 }
+
+
+#controls{
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-top: 2rem;
+}
+
+#coin-input {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: #e6edf3;
+    font-size: 16px;
+    flex: 1;
+}
+
+#add-btn {
+    background-color: #238636;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
