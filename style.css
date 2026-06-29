@@ -22,14 +22,14 @@ h1 {
     flex-direction: column;
     gap: 12px;
 }
-
+/* 
 #watchlist p {
     background-color: #161b22;
     padding: 16px 20px;
     border-radius: 8px;
     font-size: 16px;
     border: 1px solid #30363d;
-}
+} */
 
 .coin-card{
     display: flex;
@@ -80,5 +80,14 @@ h1 {
     border-radius: 8px;
     padding: 10px 20px;
     font-size: 16px;
+    cursor: pointer;
+}
+
+.remove-btn {
+    background: none;
+    border: 1px solid #f85149;
+    color: #f85149;
+    border-radius: 6px;
+    padding: 4px 10px;
     cursor: pointer;
 }

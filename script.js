@@ -52,15 +52,30 @@ function fetchCoinPrice(coinId){
             card.className = "coin-card"
             card.id = `price-${coinId}`
             
+            // Name element on te card
+
             let nameEl = document.createElement("div")
             nameEl.textContent = coinSymbols[coinId] || coinId.toUpperCase()
+
+            // Price Element on the card
 
             let priceEl = document.createElement("p")
             priceEl.className = "coin-price"
             priceEl.textContent = `$${data[coinId].usd.toLocaleString()}`
+            
+            // Remove Button
+
+            let removeBtn = document.createElement("button")
+            removeBtn.textContent = "X"
+            removeBtn.className = "remove-btn"
+
+            removeBtn.addEventListener("click", () => {
+                removeBtn.parentElement.remove()
+            })
 
             card.appendChild(nameEl)
             card.appendChild(priceEl)
+            card.appendChild(removeBtn)
             watchlist.appendChild(card)
         }
             
@@ -92,3 +107,20 @@ setInterval( () => {
     fetchCoinPrice("bitcoin")
     fetchCoinPrice("ethereum")
 }, 30000 )
+
+// Input nd button side
+
+let addButton = document.getElementById("add-btn")
+
+addButton.addEventListener("click", () => {
+    let coinId = document.getElementById("coin-input").value
+
+    // If coinId is empty, stop here
+    if (coinId === "") return 
+
+    // fetch the coin price
+    fetchCoinPrice(coinId)
+
+    // Clear the input 
+    document.getElementById("coin-input").value = ""
+})
