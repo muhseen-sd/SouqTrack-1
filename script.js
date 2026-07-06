@@ -179,7 +179,7 @@ setInterval( () => {
 let addButton = document.getElementById("add-btn")
 
 addButton.addEventListener("click", () => {
-    let coinId = document.getElementById("coin-input").value
+    let coinId = document.getElementById("coin-input").value.toLowerCase().trim()
 
     // If coinId is empty, stop here
     if (coinId === "") return 
