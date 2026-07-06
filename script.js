@@ -7,8 +7,27 @@ const notifictaionsEl = document.getElementById("notifications")
 const coinSymbols = {
     bitcoin: "BTC",
     ethereum: "ETH",
-    solana: "SOL"
+    solana: "SOL",
+    binancecoin: "BNB",
+    ripple: "XRP",
+    cardano: "ADA",
+    dogecoin: "DOGE",
+    polkadot: "DOT",
+    "matic-network": "MATIC",
+    near: "NEAR"
+}
 
+const coinIds = {
+    btc: "bitcoin",
+    eth: "ethereum",
+    bnb: "binancecoin",
+    xrp: "ripple",
+    ada: "cardano",
+    sol: "solana",
+    doge: "dogecoin",
+    dot: "polkadot",
+    matic: "matic-network",
+    near: "near"
 }
 
 let watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
@@ -180,6 +199,7 @@ let addButton = document.getElementById("add-btn")
 
 addButton.addEventListener("click", () => {
     let coinId = document.getElementById("coin-input").value.toLowerCase().trim()
+    coinId = coinIds[coinId] || coinId
 
     // If coinId is empty, stop here
     if (coinId === "") return 
