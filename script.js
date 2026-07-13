@@ -31,13 +31,15 @@ const coinIds = {
 }
 
 let watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+      
 
-function fetchCoinPrice(coinId){
-    fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`)
-    .then(response => response.json())
-    .then(data => {
+// converting it to async
+async function fetchCoinPrice(coinId){
+    try{
+        let response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`)
+        let data = await response.json() 
 
-        // Clear the notification when network recovers
+          // Clear the notification when network recovers
         let networkErr = document.getElementById("fetch-error")
         if (networkErr) networkErr.remove() 
 
@@ -135,13 +137,8 @@ function fetchCoinPrice(coinId){
 
             watchlistEl.appendChild(card)
         }
-            
-    })
-
-    // Error Handling: "network issue/disconnected"
-    .catch(error => {
-
-        let existing = document.getElementById("fetch-error")
+    } catch (error){
+          let existing = document.getElementById("fetch-error")
 
         if(existing){
             existing.querySelector(".error-text").textContent = `Something went wrong`
@@ -176,10 +173,9 @@ function fetchCoinPrice(coinId){
             errMsg2.appendChild(dismissBtn)
             notifictaionsEl.appendChild(errMsg2)
         }
-    })
-
-    
+    }
 }
+
 
 // Calling hardcoded function before e.g fetchCoinPrice("bitcoin")
 // Doubting wether I should inclue this or not. 
