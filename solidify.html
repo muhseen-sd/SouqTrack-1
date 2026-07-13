@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solidifying Some Concepts</title>
+</head>
+<body>
+    <div>
+        <input type="text" id="item-input" placeholder="Enter Item" required>
+        <button id="add-btn">Add Item</button>
+    </div>
+
+    <div id="list"></div>
+
+
+    <!-- ======================== Java Script ============================ -->
+    <script>
+        let input = document.getElementById("item-input")
+        let AddButton = document.getElementById("add-btn")
+        let itemListEl = document.getElementById("list") 
+
+        let itemList = JSON.parse(localStorage.getItem("itemList")) || []
+
+        AddButton.addEventListener("click", () => {
+            let inputValue = input.value
+            itemList.push(inputValue)
+            
+            localStorage.setItem("itemList", JSON.stringify(itemList))
+
+            // clear the input
+            input.value = "";
+            
+            renderItems(inputValue)
+        })
+
+        function renderItems(itemText){
+            let itemCard = document.createElement("div")
+            itemCard.id = "aList"
+            itemCard.textContent = itemText
+
+            let removeBtn = document.createElement("button")
+            removeBtn.textContent = 'X'
+            removeBtn.id = "remove-btn"
+
+            // Remove button event
+            removeBtn.addEventListener("click", () => {
+                itemCard.remove()
+
+                itemList = itemList.filter( id => id != itemText)
+                localStorage.setItem("itemList", JSON.stringify(itemList))
+
+            })
+
+
+            itemCard.appendChild(removeBtn)
+            itemListEl.appendChild(itemCard)
+
+        }
+
+        // itemList.forEach(itemText => renderItems(itemText))
+
+        setInterval( () => {
+            itemList.forEach(itemText => renderItems(itemText))
+        }, 30000)
+
+
+
+
+
+
+
+
+
+
+
+        // My original SouqTrack JS codes
+
+            console.log("1: starting up");
+    console.log("2: script keeps running"); 
+
+    const watchlistEl = document.getElementById("watchlist")
+    const notifictaionsEl = document.getElementById("notifications")
+
+    const coinSymbols = {
+        bitcoin: "BTC",
+        ethereum: "ETH",
+        solana: "SOL",
+        binancecoin: "BNB",
+        ripple: "XRP",
+        cardano: "ADA",
+        dogecoin: "DOGE",
+        polkadot: "DOT",
+        "matic-network": "MATIC",
+        near: "NEAR"
+    }
+
+    const coinIds = {
+        btc: "bitcoin",
+        eth: "ethereum",
+        bnb: "binancecoin",
+        xrp: "ripple",
+        ada: "cardano",
+        sol: "solana",
+        doge: "dogecoin",
+        dot: "polkadot",
+        matic: "matic-network",
+        near: "near"
+    }
+
+    let watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+
+    async function fetchCoinPrice(coinId){
+        
+        fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`)
+        .then(response => response.json())
+        .then(data => {
+
+            // Clear the notification when network recovers
+            let networkErr = document.getElementById("fetch-error")
+            if (networkErr) networkErr.remove() 
+
+            // Error Handling: "coin not found"
+            if(data[coinId] === undefined){
+
+                let existing = document.getElementById("invalid-coin")
+
+                if(existing){
+                    existing.querySelector(".error-text").textContent = `${coinId}: coin not found`
+                } else{
+                    let errMsg = document.createElement("p")
+                    errMsg.className = "coin-error"
+                    errMsg.id = "invalid-coin"
+                    // errMsg.textContent = `${coinId}: coin not found`
+                    // Separate span for text so button isn't wiped out.
+
+                    let textSpan = document.createElement("span")
+                    textSpan.className = "error-text"
+                    textSpan.textContent = `${coinId}: coin not found`
+
+
+                    // The remove button
+
+                    let dismissBtn = document.createElement("button")
+                    dismissBtn.textContent = "X"
+                    dismissBtn.className = "dismiss-btn"
+
+                    dismissBtn.addEventListener("click", () => {
+                        errMsg.remove() 
+                    })
+
+                    errMsg.appendChild(textSpan)
+                    errMsg.appendChild(dismissBtn)
+                    notifictaionsEl.appendChild(errMsg)
+                    }
+
+                return
+
+
+            }
+
+            console.log(data[coinId].usd)
+                    
+
+            // Setting up an auto refresh 
+            //Begin by checking if the element exist
+            let existing = document.getElementById(`price-${coinId}`)
+            
+            if(existing){
+                // card already exists -- just update the price
+                let priceEl = existing.querySelector(".coin-price")
+                priceEl.textContent = `$${data[coinId].usd.toLocaleString()}`
+
+            } else{
+                // first time - bild the full card
+                let card = document.createElement("div")
+                card.className = "coin-card"
+                card.id = `price-${coinId}`
+                
+                // Name element on te card
+
+                let nameEl = document.createElement("div")
+                nameEl.textContent = coinSymbols[coinId] || coinId.toUpperCase()
+
+                // Price Element on the card
+
+                let priceEl = document.createElement("p")
+                priceEl.className = "coin-price"
+                priceEl.textContent = `$${data[coinId].usd.toLocaleString()}`
+                
+                // Remove Button
+
+                let removeBtn = document.createElement("button")
+                removeBtn.textContent = "X"
+                removeBtn.className = "remove-btn"
+
+                removeBtn.addEventListener("click", () => {
+                    removeBtn.parentElement.remove()
+
+                    // also removing it from localStorage
+                    watchlist = watchlist.filter( id => id !== coinId)
+                    localStorage.setItem("watchlist", JSON.stringify(watchlist))
+                    updateEmptyState()
+
+                })
+
+                card.appendChild(nameEl)
+                card.appendChild(priceEl)
+                card.appendChild(removeBtn)
+
+                // Local storage 
+                watchlist.push(coinId)
+                localStorage.setItem("watchlist", JSON.stringify(watchlist))
+
+                watchlistEl.appendChild(card)
+            }
+                
+        })
+
+        // Error Handling: "network issue/disconnected"
+        .catch(error => {
+
+            let existing = document.getElementById("fetch-error")
+
+            if(existing){
+                existing.querySelector(".error-text").textContent = `Something went wrong`
+            } else{
+                let errMsg2 = document.createElement("p")
+                errMsg2.id = `fetch-error`
+                errMsg2.className = "coin-error"
+
+                // setting time out for something went wrong message
+                setTimeout(() => {
+                    errMsg2.remove()
+                }, 10000)
+
+                // errMsg2.textContent = `Something went wrong`
+                // separate span for text so button isn't wipe 
+
+                let textSpan = document.createElement("span")
+                textSpan.className = "error-text"
+                textSpan.textContent = `Something went wrong`
+
+                // the remove button for "somthing went wrong"
+                let dismissBtn = document.createElement("button")
+                dismissBtn.className = "dismiss-btn"
+                dismissBtn.textContent = "X"
+
+                dismissBtn.addEventListener("click", () => {
+                    errMsg2.remove()
+
+                })
+
+                errMsg2.appendChild(textSpan)
+                errMsg2.appendChild(dismissBtn)
+                notifictaionsEl.appendChild(errMsg2)
+            }
+        })
+
+        
+    }
+
+    // Calling hardcoded function before e.g fetchCoinPrice("bitcoin")
+    // Doubting wether I should inclue this or not. 
+    watchlist.forEach(coinId => fetchCoinPrice(coinId))
+    updateEmptyState()
+
+
+    setInterval( () => {
+        watchlist.forEach(coinId => fetchCoinPrice(coinId))
+    }, 30000 )
+
+
+
+    // Input nd button side
+
+    let addButton = document.getElementById("add-btn")
+
+    addButton.addEventListener("click", () => {
+        let coinId = document.getElementById("coin-input").value.toLowerCase().trim()
+        coinId = coinIds[coinId] || coinId
+
+        // If coinId is empty, stop here
+        if (coinId === "") return 
+        
+        // to avoid adding a single coin twice
+        if(watchlist.includes(coinId)) return
+
+
+        // fetch the coin price
+        fetchCoinPrice(coinId)
+        updateEmptyState()
+
+
+        // Clear the input 
+        document.getElementById("coin-input").value = ""
+
+    })
+
+    // Empty state function to notify new user
+
+    function updateEmptyState(){
+        let emptyState = document.getElementById("empty-state")
+        if(!emptyState) return 
+
+        if(watchlist.length === 0){
+            emptyState.style.display = "block"
+
+        } else{
+            emptyState.style.display = "none"
+        }
+    }
+
+
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
