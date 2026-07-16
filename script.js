@@ -36,8 +36,9 @@ let watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
 // converting it to async
 async function fetchCoinPrice(coinId){
     try{
-        let response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`)
+        let response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_24hr_change=true`)
         let data = await response.json() 
+
 
           // Clear the notification when network recovers
         let networkErr = document.getElementById("fetch-error")
@@ -93,6 +94,14 @@ async function fetchCoinPrice(coinId){
             // card already exists -- just update the price
             let priceEl = existing.querySelector(".coin-price")
             priceEl.textContent = `$${data[coinId].usd.toLocaleString()}`
+            // For the percentage 
+
+            let change = data[coinId].usd_24h_change.toFixed(2)
+            let changeText = change >= 0 ? `+${change}%` : `${change}%`
+
+            let changeEl = existing.querySelector(".coin-change")
+            changeEl.textContent = changeText
+            changeEl.className = change >= 0 ? "coin-change positive" : "coin-change negative"
 
         } else{
             // first time - bild the full card
@@ -110,6 +119,14 @@ async function fetchCoinPrice(coinId){
             let priceEl = document.createElement("p")
             priceEl.className = "coin-price"
             priceEl.textContent = `$${data[coinId].usd.toLocaleString()}`
+
+            // Percentage display 
+            let change = data[coinId].usd_24h_change.toFixed(2)
+            let changeText = change >= 0 ? `+${change}%` : `${change}%`
+
+            let changeEl = document.createElement("p")
+            changeEl.className = change >= 0 ? "coin-change positive" : "coin-change negative"
+            changeEl.textContent = changeText
             
             // Remove Button
 
@@ -129,6 +146,7 @@ async function fetchCoinPrice(coinId){
 
             card.appendChild(nameEl)
             card.appendChild(priceEl)
+            card.appendChild(changeEl)
             card.appendChild(removeBtn)
 
             // Local storage 
@@ -227,4 +245,3 @@ function updateEmptyState(){
         emptyState.style.display = "none"
     }
 }
-
